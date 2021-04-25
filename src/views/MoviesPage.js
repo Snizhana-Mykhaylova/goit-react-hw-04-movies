@@ -1,11 +1,12 @@
 import { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import Axios from 'axios';
 
 class MoviesPage extends Component {
   state = {
     movies: [],
     query: '',
+    error: null,
   };
 
   fetchdata() {
@@ -15,8 +16,8 @@ class MoviesPage extends Component {
       .then(response => response.data)
       .then(data => {
         this.setState({ movies: data.results });
-        console.log(data.results);
-      });
+      })
+      .catch(error => this.setState({ error: error }));
   }
 
   handleChange = event => {
@@ -32,12 +33,9 @@ class MoviesPage extends Component {
   render() {
     return (
       <>
-        <form onSubmit={this.handelSubmit}>
-          <button type="submit">
-            <span>Search</span>
-          </button>
-
+        <form onSubmit={this.handelSubmit} className="SearchForm">
           <input
+            className="SearchFormInput"
             value={this.state.query}
             onChange={this.handleChange}
             type="text"
@@ -53,9 +51,12 @@ class MoviesPage extends Component {
             this.state.movies.map(movie => {
               return (
                 <li key={movie.id}>
-                  <Link to={`${this.props.match.url}/${movie.id}`}>
+                  <NavLink
+                    className="navLink"
+                    to={`${this.props.match.url}/${movie.id}`}
+                  >
                     {movie.title ? movie.title : movie.name}
-                  </Link>
+                  </NavLink>
                 </li>
               );
             })

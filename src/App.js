@@ -1,10 +1,8 @@
-import React, { Suspence, lazy } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Switch, Route } from 'react-router-dom';
-// import HomePage from './views/HomePage';
-// import MoviesPage from './views/MoviesPage';
-// import MovieDetailsPage from './views/MovieDatailsPage';
-import AppBar from './Components/AppBar';
 import routes from './routes';
+import Container from './Components/Container';
+import AppBar from './Components/AppBar';
 import Loader from './Components/Loader';
 
 const HomePage = lazy(() =>
@@ -21,16 +19,16 @@ const MovieDetailsPage = lazy(() =>
 
 const App = () => {
   return (
-    <>
+    <Container>
       <AppBar />
-      <Suspence fallback={<Loader />}>
+      <Suspense fallback={<Loader />}>
         <Switch>
           <Route path={routes.home} exact component={HomePage} />
           <Route path={routes.movieDetailsPage} component={MovieDetailsPage} />
           <Route path={routes.moviesPage} component={MoviesPage} />
         </Switch>
-      </Suspence>
-    </>
+      </Suspense>
+    </Container>
   );
 };
 

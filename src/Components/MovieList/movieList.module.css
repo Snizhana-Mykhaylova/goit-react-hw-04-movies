@@ -1,0 +1,14 @@
+.Movielist {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.MovieItem {
+  width: 350px;
+  height: 560px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}

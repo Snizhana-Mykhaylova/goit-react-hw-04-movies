@@ -1,42 +1,50 @@
 import { Component } from 'react';
-import Axios from 'axios';
-
+import { fetchhMovieCast } from '../../services/fetchApi';
 import defaultAvatar from '../../images/defaultAvatar.png';
+import styles from './cast.module.css';
 
 class Cast extends Component {
   state = {
     cast: [],
+    error: null,
   };
 
   componentDidMount() {
-    Axios.get(
-      `https://api.themoviedb.org/3/movie/${this.props.match.params.movieId}/credits?api_key=b3eca1c919732b8163c247708ee195fb&&language=en-US`,
-    )
-      .then(response => response.data)
-      .then(data => data.cast)
-      .then(cast =>
+    fetchhMovieCast(this.props.match.params.movieId)
+      .then(cast => {
         this.setState({
           cast: cast,
-        }),
-      );
+        });
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth',
+        });
+      })
+      .catch(error => this.setState({ error: error }));
   }
 
   render() {
-    return this.state.cast.map(({ id, name, character, profile_path }) => {
-      const imgUrl = profile_path
-        ? `https://image.tmdb.org/t/p/w500${profile_path}`
-        : defaultAvatar;
-
-      return (
-        <li key={id}>
-          <img src={imgUrl} alt={name} />
-          <div>
-            <p>Name: {name} </p>
-            <p> Character : {character}</p>
-          </div>
-        </li>
-      );
-    });
+    return (
+      <>
+        <h5>Cast: </h5>
+        <ul className={styles.flex}>
+          {this.state.cast.map(({ id, name, character, profile_path }) => {
+            const imgUrl = profile_path
+              ? `https://image.tmdb.org/t/p/w500${profile_path}`
+              : defaultAvatar;
+            return (
+              <li key={id} className={styles.card}>
+                <img src={imgUrl} alt={name} />
+                <div>
+                  <p>{name} </p>
+                  <p> {character}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </>
+    );
   }
 }
 

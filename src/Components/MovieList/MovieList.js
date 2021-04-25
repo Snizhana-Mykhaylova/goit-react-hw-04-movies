@@ -1,13 +1,15 @@
 import { Link, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import MoviePreview from '../MoviePreview';
+import styles from './movieList.module.css';
 
 const MovieList = ({ movies, location }) => (
-  <ul>
+  <ul className={styles.Movielist}>
     {movies.map(({ title, name, id, poster_path }) => {
       const movieTitle = title ? title : name;
 
       return (
-        <li key={id}>
+        <li key={id} className={styles.MovieItem}>
           <Link
             to={{
               pathname: `/movies/${id}`,
@@ -23,5 +25,14 @@ const MovieList = ({ movies, location }) => (
     })}
   </ul>
 );
+
+MovieList.defaultProps = {
+  location: '',
+};
+
+MovieList.propTypes = {
+  movies: PropTypes.arrayOf(PropTypes.shape({})),
+  location: PropTypes.object,
+};
 
 export default withRouter(MovieList);

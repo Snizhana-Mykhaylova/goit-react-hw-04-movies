@@ -1,22 +1,24 @@
 import { Component } from 'react';
-import Axios from 'axios';
+import { fetchhMovieReviews } from '../../services/fetchApi';
 
 class Review extends Component {
   state = {
     reviews: [],
+    error: null,
   };
 
   componentDidMount() {
-    Axios.get(
-      `https://api.themoviedb.org/3/movie/${this.props.match.params.movieId}/reviews?api_key=b3eca1c919732b8163c247708ee195fb&&language=en-US&page=1`,
-    )
-      .then(response => response.data)
-      .then(data => data.results)
-      .then(results =>
+    fetchhMovieReviews(this.props.match.params.movieId)
+      .then(results => {
         this.setState({
           reviews: results,
-        }),
-      );
+        });
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth',
+        });
+      })
+      .catch(error => this.setState({ error: error }));
   }
 
   render() {

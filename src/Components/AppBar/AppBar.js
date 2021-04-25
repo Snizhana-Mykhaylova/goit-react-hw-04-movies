@@ -5,12 +5,13 @@ import { NavLink } from 'react-router-dom';
 import routes from '../../routes';
 
 const AppBar = () => (
-  <header>
+  <header className="AppBar">
     <nav>
       <NavLink
         to={routes.home}
         exact
-        // className="navLink"
+        className="navLink"
+
         // activClassName="active"
       >
         Home
@@ -18,7 +19,7 @@ const AppBar = () => (
 
       <NavLink
         to={routes.moviesPage}
-        // className="navLink"
+        className="navLink"
         // activClassName="active"
       >
         Movie

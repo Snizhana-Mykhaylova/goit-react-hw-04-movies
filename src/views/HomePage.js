@@ -1,30 +1,27 @@
 import { Component } from 'react';
-
-import Axios from 'axios';
-
+import { fetchTrendingMovies } from '../services/fetchApi';
 import MovieList from '../Components/MovieList';
 
 class HomePage extends Component {
   state = {
     movies: [],
+    error: null,
   };
 
   componentDidMount() {
-    Axios.get(
-      'https://api.themoviedb.org/3/trending/all/day?api_key=b3eca1c919732b8163c247708ee195fb',
-    )
-      .then(response => response.data)
+    fetchTrendingMovies()
       .then(data => {
         this.setState({ movies: data.results });
-      });
+      })
+      .catch(error => this.setState({ error: error }));
   }
 
   render() {
     return (
-      <>
-        <h1>Trending today</h1>
+      <div className="HomeView">
+        <h1 className="HomeView-title">Trending today</h1>
         <MovieList movies={this.state.movies} />
-      </>
+      </div>
     );
   }
 }
