@@ -1,12 +1,17 @@
-import { Component } from 'react';
+import { Component, Suspense, lazy } from 'react';
 import { Route, NavLink } from 'react-router-dom';
 import { fetchhMovieDetails } from '../services/fetchApi';
-
-import Cast from '../Components/Cast';
-import Review from '../Components/Review';
+import Loader from '../Components/Loader';
 import defaultPoster from '../images/poster_path_not_found.jpg';
 
 import routes from '../routes';
+
+const Cast = lazy(() =>
+  import('../Components/Cast' /* webpackChunkName: "cast" */),
+);
+const Review = lazy(() =>
+  import('../Components/Review' /* webpackChunkName: "reviews" */),
+);
 
 class MovieDetailsPage extends Component {
   state = {
@@ -90,8 +95,10 @@ class MovieDetailsPage extends Component {
           </div>
         </div>
 
-        <Route path={`${match.path}/cast`} component={Cast} />
-        <Route path={`${match.path}/reviews`} component={Review} />
+        <Suspense fallback={<Loader />}>
+          <Route path={`${match.path}/cast`} component={Cast} />
+          <Route path={`${match.path}/reviews`} component={Review} />
+        </Suspense>
       </>
     );
   }

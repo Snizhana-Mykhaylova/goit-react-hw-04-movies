@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import Axios from 'axios';
+import queryString from 'query-string';
 
 class MoviesPage extends Component {
   state = {
@@ -9,12 +10,29 @@ class MoviesPage extends Component {
     error: null,
   };
 
-  fetchdata() {
+  componentDidMount() {
+    const query = this.getQueryFromProps(this.props);
+    if (query) {
+      this.fetchdata(query);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const prevQuery = this.getQueryFromProps(prevProps);
+    const query = this.getQueryFromProps(this.props);
+    if (prevQuery !== query) {
+      this.fetchdata(this.state.query);
+    }
+  }
+
+  fetchdata(query) {
     Axios.get(
-      `https://api.themoviedb.org/3/search/movie?query=${this.state.query}&api_key=b3eca1c919732b8163c247708ee195fb`,
+      `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=b3eca1c919732b8163c247708ee195fb`,
     )
       .then(response => response.data)
       .then(data => {
+        const { history, location } = this.props;
+        history.push({ ...location, search: `?query=${query}` });
         this.setState({ movies: data.results });
       })
       .catch(error => this.setState({ error: error }));
@@ -26,9 +44,15 @@ class MoviesPage extends Component {
 
   handelSubmit = event => {
     event.preventDefault();
+
+    this.props.history.push({
+      pathname: this.props.location.pathname,
+      search: `query=${event.currentTarget.value}`,
+    });
     this.fetchdata();
-    this.setState({ query: '' });
   };
+
+  getQueryFromProps = props => queryString.parse(props.location.search).query;
 
   render() {
     return (
@@ -53,7 +77,10 @@ class MoviesPage extends Component {
                 <li key={movie.id}>
                   <NavLink
                     className="navLink"
-                    to={`${this.props.match.url}/${movie.id}`}
+                    to={{
+                      pathname: `/movies/${movie.id}`,
+                      state: { from: this.props.location },
+                    }}
                   >
                     {movie.title ? movie.title : movie.name}
                   </NavLink>
