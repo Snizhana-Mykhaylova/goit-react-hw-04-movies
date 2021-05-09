@@ -82,12 +82,28 @@ class MovieDetailsPage extends Component {
             <ul>
               <li>
                 {' '}
-                <NavLink to={`${match.url}/cast`} className="navLink">
+                <NavLink
+                  to={{
+                    pathname: `${match.url}/cast`,
+                    state: {
+                      from: this.props.location.state.from,
+                    },
+                  }}
+                  className="navLink"
+                >
                   Cast
                 </NavLink>
               </li>
               <li>
-                <NavLink to={`${match.url}/reviews`} className="navLink">
+                <NavLink
+                  to={{
+                    pathname: `${match.url}/reviews`,
+                    state: {
+                      from: this.props.location.state.from,
+                    },
+                  }}
+                  className="navLink"
+                >
                   Reviews
                 </NavLink>
               </li>
